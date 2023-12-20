@@ -1,0 +1,62 @@
+[tool.poetry]
+name = "howcanitake"
+homepage = "https://github.com/gembcior/how-can-i-take"
+version = "0.1.0"
+description = "How Can I Take"
+authors = ["Gembcior <gembcior@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+classifiers = [
+  "License :: OSI Approved :: MIT License",
+  "Environment :: Console",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3.12",
+]
+packages = [{ include = "hcit" }]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+rich = "^12.5"
+flask = "^3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.mypy]
+files = ["hcit"]
+show_error_codes = true
+strict = true
+enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]
+disable_error_code = ["union-attr"]
+
+[[tool.mypy.overrides]]
+module = ["rich.*", "click.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.isort]
+profile = "black"
+
+[tool.black]
+line-length = 160
+
+[tool.pylama]
+max-line-length = 160
+format = "pylint"
+skip = "*/.tox/*,*/.env/*,**/__init__.py"
+linters = "eradicate,mccabe,pycodestyle,pyflakes,pylint"
+ignore = """
+  W0511,
+  E501,
+  D1,
+  C,
+  R,
+"""
+
+[tool.pylama.linter.pycodestyle]
+ignore = "E203,E501"
+max-line-length = 160
