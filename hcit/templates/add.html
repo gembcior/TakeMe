@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Add Resource</h2>
+
+<form class="needs-validation" action="" method="POST" novalidate>
+  {{ form.hidden_tag() }}
+  <div>
+  {% for field in form %}
+    {% if not field.flags.hidden %}
+    <label class="form-label">{{ field.label }}</label>
+    {{ field(class_="form-control", required="true") }}
+
+  {% if field.errors %}
+    {% for error in field.errors %}
+      <div class="invalid-feedback">
+        {{ error }}
+      </div>
+    {% endfor %}
+  {% endif %}
+  {% endif %}
+{% endfor %}
+  </div>
+
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock content %}
