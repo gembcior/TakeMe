@@ -1,27 +1,51 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Login</h2>
 
+<div class="form-signin w-100 m-auto">
 <form class="needs-validation" action="" method="POST" novalidate>
-  {{ form.hidden_tag() }}
-  <div>
-  {% for field in form %}
-    {% if not field.flags.hidden %}
-    <label class="form-label">{{ field.label }}</label>
-    {{ field(class_="form-control", required="true") }}
+  <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
-  {% if field.errors %}
-    {% for error in field.errors %}
+  {{ form.hidden_tag() }}
+
+  <div class="form-floating">
+    {{ form.username(class_="form-control", required="true", id="floatingInput", placeholder="Username") }}
+    <label for="floatingInput">{{ form.username.label }}</label>
+
+  {% if form.username.errors %}
+    {% for error in form.username.errors %}
       <div class="invalid-feedback">
         {{ error }}
       </div>
     {% endfor %}
   {% endif %}
-  {% endif %}
-{% endfor %}
   </div>
 
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <div class="form-floating">
+    {{ form.password(class_="form-control", required="true", id="floatingPassword", placeholder="Password") }}
+    <label for="floatingPassword">{{ form.password.label }}</label>
+
+  {% if form.password.errors %}
+    {% for error in form.password.errors %}
+      <div class="invalid-feedback">
+        {{ error }}
+      </div>
+    {% endfor %}
+  {% endif %}
+  </div>
+
+  <div class="form-check text-start my-3">
+    {{ form.remember_me(class_="form-check-input", id="flexCheckDefault", value="remember-me") }}
+    <label class="form-check-label" for="flexCheckDefault">
+      Remember me
+    </label>
+  </div>
+
+  {{ form.submit(class_="btn btn-primary w-100 py-2") }}
 </form>
+<p class="mt-2 text-center">
+  <a class="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover" href="{{ url_for('pages.register') }}">Register</a>
+</p>
+</div>
+
 {% endblock content %}
