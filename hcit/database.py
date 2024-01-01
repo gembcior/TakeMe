@@ -3,7 +3,7 @@ from datetime import datetime
 from flask_login import UserMixin
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Boolean, DateTime, Integer, String
+from sqlalchemy import Boolean, DateTime, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from hcit.crypto import bcrypt
@@ -34,8 +34,13 @@ class Resource(database.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String, unique=True, nullable=False)
     taken: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
-    taken_by: Mapped[str] = mapped_column(String)
+    taken_by: Mapped[str] = mapped_column(String, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    resource_type: Mapped[str] = mapped_column(String, nullable=False)
+    taken_on: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    notes: Mapped[str] = mapped_column(Text, nullable=True)
 
-    def __init__(self, name):
+    def __init__(self, name, resource_type, notes):
         self.name = name
+        self.resource_type = resource_type
+        self.notes = notes

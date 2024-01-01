@@ -1,42 +1,51 @@
-{% macro resource_group_item(name) %}
+{% macro resource_group_item(resource) %}
 
   <div class="list-group-item">
 
     <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex justify-content-start align-items-center">
 
-        <div class="d-flex align-items-center p-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ name }}" aria-expanded="false" aria-controls="collapse{{ name }}">
+        <div class="d-flex align-items-center p-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ resource.name }}" aria-expanded="false" aria-controls="collapse{{ resource.name }}">
           <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-cpu" viewBox="0 0 16 16">
             <path d="M5 0a.5.5 0 0 1 .5.5V2h1V.5a.5.5 0 0 1 1 0V2h1V.5a.5.5 0 0 1 1 0V2h1V.5a.5.5 0 0 1 1 0V2A2.5 2.5 0 0 1 14 4.5h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14a2.5 2.5 0 0 1-2.5 2.5v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14A2.5 2.5 0 0 1 2 11.5H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2A2.5 2.5 0 0 1 4.5 2V.5A.5.5 0 0 1 5 0m-.5 3A1.5 1.5 0 0 0 3 4.5v7A1.5 1.5 0 0 0 4.5 13h7a1.5 1.5 0 0 0 1.5-1.5v-7A1.5 1.5 0 0 0 11.5 3zM5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5zM6.5 6a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"/>
           </svg>
-          <span class="fs-4 ms-2">{{ name }}</span>
+          <span class="fs-4 ms-2">{{ resource.name }}</span>
         </div>
 
+      {% if resource.taken %}
+        <span class="badge rounded-pill text-bg-danger">Taken</span>
+      {% else %}
         <span class="badge rounded-pill text-bg-success">Free</span>
+      {% endif %}
       </div>
 
 
-      <button type="button" class="btn btn-primary">Take</button>
+    {% if resource.taken %}
+    <button type="button" class="btn btn-secondary" onclick="releaseResource('{{ resource.name }}')">Release</button>
+    {% else %}
+    <button type="button" class="btn btn-primary" onclick="takeResource('{{ resource.name }}')">Take</button>
+    {% endif %}
+
     </div>
 
     <div class="mx-2">
       <span>Some notes</span>
     </div>
 
+    <div class="collapse" id="collapse{{ resource.name }}">
+
+    {% if resource.taken %}
     <div class="mt-2">
       <div class="px-2 py-1 text-warning-emphasis bg-warning-subtle border border-warning-subtle rounded-2">
         <div class="d-flex flex-column justify-content-start">
-          <span>Taken by: <b class="fw-bold">Jan Kowalski</b></span>
-          <span>Time: <b class="fw-bold">2012.12.12 10:32</b></span>
-          <span>Message: <b class="fw-bold">Soak test running all night long</b></span>
+          <span>Taken by: <b class="fw-bold">{{ resource.taken_by}}</b></span>
+          <span>Time: <b class="fw-bold">{{ resource.taken_on}}</b></span>
+          <span>Message: <b class="fw-bold">Message placeholder for now</b></span>
         </div>
       </div>
     </div>
+    {% endif %}
 
-    <div class="mt-2 collapse" id="collapse{{ name }}">
-      <div class="card card-body">
-        Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
-      </div>
     </div>
 
   </div>
@@ -48,10 +57,15 @@
 
 <div class="list-group">
 
-  {{ resource_group_item('PC-Resource-01') }}
-  {{ resource_group_item('PC-Resource-02') }}
-  {{ resource_group_item('PC-Resource-03') }}
+  {% for res in resources %}
+    {{ resource_group_item(res) }}
+  {% endfor %}
+
 
 </div>
 
 {% endblock content %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/resource.js') }}"></script>
+{% endblock scripts %}

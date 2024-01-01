@@ -1,18 +1,24 @@
-from flask import Blueprint, flash, redirect, render_template
+import json
+
+from flask import Blueprint, Response
+from flask import current_app as app
+from flask import redirect, render_template, request
 from flask_login import current_user, login_required, login_user, logout_user
 from flask_wtf import FlaskForm
 from wtforms import (
     BooleanField,
     PasswordField,
+    SelectField,
     StringField,
     SubmitField,
+    TextAreaField,
     ValidationError,
 )
 from wtforms.validators import DataRequired, EqualTo, Length
 from wtforms.widgets import PasswordInput, TextInput
 
 from hcit.crypto import bcrypt
-from hcit.database import User, database
+from hcit.database import Resource, User, database
 
 bp = Blueprint("pages", __name__)
 
@@ -70,46 +76,67 @@ class LoginUserForm(FlaskForm):
 
 
 class AddResourceForm(FlaskForm):
-    name = StringField("Resource Name", validators=[DataRequired()])
+    name = StringField("Resource name", validators=[DataRequired()])
+    notes = TextAreaField("Notes")
+    resource_type = SelectField("Resource type", choices=[("fpga", "FPGA"), ("asic", "ASIC"), ("other", "Other")], default="other")
+    submit = SubmitField("Add resource")
 
 
-@bp.route("/", methods=["GET", "POST"])
+@bp.route("/")
 def home():
-    return render_template("home.html")
+    resources = Resource.query.all()
+    return render_template("home.html", resources=resources)
 
 
 @bp.route("/login", methods=["GET", "POST"])
 def login():
     if current_user.is_authenticated:
-        flash("You are already logged in.", "info")
         return redirect("/")
     form = LoginUserForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
         if user and bcrypt.check_password_hash(user.password, form.password.data):
             login_user(user, remember=form.remember_me.data)
+            app.logger.info(f"User {user.username} logged in")
             return redirect("/")
         else:
-            flash("Invalid username and/or password.", "danger")
+            app.logger.warning("Invalid username and/or password")
     return render_template("login.html", form=form)
+
+
+@bp.route("/resource", methods=["GET", "POST"])
+@login_required
+def resource():
+    app.logger.warning("Resource POST")
+    # data: dict = json.loads(request.data)
+    data = request.json
+    cmd = data.get("cmd")
+    if cmd == "take":
+        resource = Resource.query.filter_by(name=data["name"]).first()
+        resource.taken = True
+        database.session.commit()
+    elif cmd == "release":
+        resource = Resource.query.filter_by(name=data["name"]).first()
+        resource.taken = False
+        database.session.commit()
+    return Response(status=204)
 
 
 @bp.route("/logout")
 @login_required
 def logout():
     logout_user()
-    flash("You were logged out.", "success")
+    app.logger.info("User logged out")
     return redirect("/")
 
 
 @bp.route("/register", methods=["GET", "POST"])
 def register():
     if current_user.is_authenticated:
-        flash("You are already registered.", "info")
         return redirect("/")
     form = RegisterUserForm()
     if form.validate_on_submit():
-        user = User(  # noqa
+        user = User(
             username=form.username.data,
             first_name=form.first_name.data,
             last_name=form.last_name.data,
@@ -117,14 +144,22 @@ def register():
         )
         database.session.add(user)
         database.session.commit()
-        flash("Register success. You can now sign in!", "success")
+        app.logger.info(f"New user {user.username} registered")
         return redirect("login")
     return render_template("register.html", form=form)
 
 
 @bp.route("/add", methods=["GET", "POST"])
+@login_required
 def add():
     form = AddResourceForm()
     if form.validate_on_submit():
+        resource = Resource(
+            name=form.name.data,
+            resource_type=form.resource_type.data,
+            notes=form.notes.data,
+        )
+        database.session.add(resource)
+        database.session.commit()
         return redirect("/")
     return render_template("add.html", form=form)

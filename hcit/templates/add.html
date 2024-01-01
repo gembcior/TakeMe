@@ -1,27 +1,38 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Add Resource</h2>
 
-<form class="needs-validation" action="" method="POST" novalidate>
-  {{ form.hidden_tag() }}
-  <div>
-  {% for field in form %}
-    {% if not field.flags.hidden %}
-    <label class="form-label">{{ field.label }}</label>
-    {{ field(class_="form-control", required="true") }}
+<div class="form-add-resource w-100 m-auto">
 
-  {% if field.errors %}
-    {% for error in field.errors %}
-      <div class="invalid-feedback">
-        {{ error }}
-      </div>
-    {% endfor %}
-  {% endif %}
-  {% endif %}
-{% endfor %}
+<form class="align-items-center needs-validation" action="" method="POST" novalidate>
+
+  <h1 class="h3 mb-3 fw-normal">Add resource</h1>
+
+  <div class="row my-2">
+    <div class="col">
+      <label>{{ form.name.label }}</label>
+      {{ form.name(class_="form-control", required="true") }}
+    </div>
+
+    <div class="col-md-4">
+      <label>{{ form.resource_type.label }}</label>
+      {{ form.resource_type(class_="form-select", required="true") }}
+    </div>
   </div>
 
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <div class="row my-2">
+    <div class="col">
+      <label>{{ form.notes.label }}</label>
+      {{ form.notes(class_="form-control", required="true") }}
+    </div>
+  </div>
+
+  <div class="my-2">
+    {{ form.submit(class_="btn btn-primary") }}
+  </div>
+
 </form>
+
+</div>
+
 {% endblock content %}
