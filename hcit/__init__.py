@@ -1,9 +1,10 @@
 from flask import Flask
 
-from hcit import pages
+from hcit.api import api_bp
 from hcit.crypto import bcrypt
 from hcit.database import database, migrate
-from hcit.login import login_manager
+from hcit.login import jwt, login_manager
+from hcit.ui import ui_bp
 
 
 class Config(object):
@@ -14,6 +15,9 @@ class Config(object):
     BCRYPT_LOG_ROUNDS = 13
     WTF_CSRF_ENABLED = True
     SECRET_KEY = "192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf"
+    JWT_TOKEN_LOCATION = ["headers", "cookies"]
+    JWT_SECRET_KEY = "192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf"
+    JWT_COOKIE_SECURE = False
 
 
 class ProductionConfig(Config):
@@ -43,6 +47,7 @@ def create_app() -> Flask:
     cfg = DevelopmentConfig()
     app.config.from_object(cfg)
 
+    jwt.init_app(app)
     login_manager.init_app(app)
     bcrypt.init_app(app)
     database.init_app(app)
@@ -51,5 +56,6 @@ def create_app() -> Flask:
     with app.app_context():
         database.create_all()
 
-    app.register_blueprint(pages.bp)
+    app.register_blueprint(ui_bp, url_prefix="/")
+    app.register_blueprint(api_bp, url_prefix="/api")
     return app

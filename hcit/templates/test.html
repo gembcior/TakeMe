@@ -1,0 +1,17 @@
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center">
+  <button type="button" class="btn btn-primary" onclick="test1()">Test 1</button>
+  <button type="button" class="btn btn-primary" onclick="test2()">Test 2</button>
+  <button type="button" class="btn btn-primary" onclick="test3()">Test 3</button>
+  <button type="button" class="btn btn-primary" onclick="test4()">Test 4</button>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/test.js') }}"></script>
+{% endblock scripts %}

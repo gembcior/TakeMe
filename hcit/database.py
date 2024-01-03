@@ -34,10 +34,10 @@ class Resource(database.Model):
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String, unique=True, nullable=False)
     taken: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
-    taken_by: Mapped[str] = mapped_column(String, nullable=True)
+    taken_by: Mapped[str | None] = mapped_column(String, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     resource_type: Mapped[str] = mapped_column(String, nullable=False)
-    taken_on: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    taken_on: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     notes: Mapped[str] = mapped_column(Text, nullable=True)
 
     def __init__(self, name, resource_type, notes):
