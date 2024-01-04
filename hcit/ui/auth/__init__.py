@@ -1,6 +1,6 @@
 from flask import Blueprint
 from flask import current_app as app
-from flask import redirect, render_template, request
+from flask import redirect, render_template
 from flask_login import current_user, login_required, login_user, logout_user
 
 from hcit.crypto import bcrypt

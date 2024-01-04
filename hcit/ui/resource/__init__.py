@@ -1,4 +1,5 @@
 from flask import Blueprint, redirect, render_template
+from flask_login import login_required
 
 from hcit.database import Resource, database
 from hcit.form import AddResourceForm
@@ -7,6 +8,7 @@ resource_bp = Blueprint("resource", __name__)
 
 
 @resource_bp.route("/add", methods=["GET", "POST"])
+@login_required
 def add():
     form = AddResourceForm()
     if form.validate_on_submit():
@@ -22,10 +24,12 @@ def add():
 
 
 @resource_bp.route("/take", methods=["GET", "POST"])
+@login_required
 def take():
     return redirect("/")
 
 
 @resource_bp.route("/release", methods=["GET", "POST"])
+@login_required
 def release():
     return redirect("/")
