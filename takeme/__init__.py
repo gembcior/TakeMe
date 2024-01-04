@@ -1,10 +1,10 @@
 from flask import Flask
 
-from hcit.api import api_bp
-from hcit.crypto import bcrypt
-from hcit.database import database, migrate
-from hcit.login import jwt, login_manager
-from hcit.ui import ui_bp
+from takeme.api import api_bp
+from takeme.crypto import bcrypt
+from takeme.database import database, migrate
+from takeme.login import jwt, login_manager
+from takeme.ui import ui_bp
 
 
 class Config(object):

@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "howcanitake"
-homepage = "https://github.com/gembcior/how-can-i-take"
+name = "TakeMe"
+homepage = "https://github.com/gembcior/take-me"
 version = "0.1.0"
-description = "How Can I Take"
+description = "Take Me"
 authors = ["Gembcior <gembcior@gmail.com>"]
 license = "MIT"
 readme = "README.md"
@@ -12,7 +12,7 @@ classifiers = [
   "Operating System :: POSIX :: Linux",
   "Programming Language :: Python :: 3.12",
 ]
-packages = [{ include = "hcit" }]
+packages = [{ include = "takeme" }]
 
 [tool.poetry.dependencies]
 flask = "^3.0"
@@ -33,7 +33,7 @@ requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.mypy]
-files = ["hcit"]
+files = ["takeme"]
 show_error_codes = true
 strict = true
 enable_error_code = ["ignore-without-code", "redundant-expr", "truthy-bool"]

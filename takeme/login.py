@@ -1,7 +1,7 @@
 from flask_jwt_extended import JWTManager
 from flask_login import LoginManager
 
-from hcit.database import User
+from takeme.database import User
 
 login_manager = LoginManager()
 

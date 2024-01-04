@@ -3,9 +3,9 @@ from flask import current_app as app
 from flask import redirect, render_template
 from flask_login import current_user, login_required, login_user, logout_user
 
-from hcit.crypto import bcrypt
-from hcit.database import User, database
-from hcit.form import LoginUserForm, RegisterUserForm
+from takeme.crypto import bcrypt
+from takeme.database import User, database
+from takeme.form import LoginUserForm, RegisterUserForm
 
 auth_bp = Blueprint("auth", __name__)
 

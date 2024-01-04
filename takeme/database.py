@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Boolean, DateTime, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
-from hcit.crypto import bcrypt
+from takeme.crypto import bcrypt
 
 database = SQLAlchemy()
 migrate = Migrate()

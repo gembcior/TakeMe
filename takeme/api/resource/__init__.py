@@ -4,8 +4,8 @@ from flask import Blueprint, jsonify, make_response
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from sqlalchemy.exc import NoResultFound
 
-from hcit.database import Resource, database
-from hcit.login import jwt
+from takeme.database import Resource, database
+from takeme.login import jwt
 
 api_resource_bp = Blueprint("api", __name__)
 

@@ -11,7 +11,7 @@ from wtforms import (
 from wtforms.validators import DataRequired, EqualTo, Length
 from wtforms.widgets import PasswordInput, TextInput
 
-from hcit.database import User, database
+from takeme.database import User, database
 
 
 class MyTextInput(TextInput):

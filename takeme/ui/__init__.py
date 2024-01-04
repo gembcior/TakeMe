@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template
 
-from hcit.database import Resource, database
-from hcit.ui.auth import auth_bp
-from hcit.ui.resource import resource_bp
+from takeme.database import Resource, database
+from takeme.ui.auth import auth_bp
+from takeme.ui.resource import resource_bp
 
 ui_bp = Blueprint("ui", __name__)
 ui_bp.register_blueprint(auth_bp, url_prefix="/auth")

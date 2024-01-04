@@ -1,8 +1,8 @@
 from flask import Blueprint, redirect, render_template
 from flask_login import login_required
 
-from hcit.database import Resource, database
-from hcit.form import AddResourceForm
+from takeme.database import Resource, database
+from takeme.form import AddResourceForm
 
 resource_bp = Blueprint("resource", __name__)
 
