@@ -38,7 +38,8 @@ class Resource(database.Model):
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     resource_type: Mapped[str] = mapped_column(String, nullable=False)
     taken_on: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
-    notes: Mapped[str] = mapped_column(Text, nullable=True)
+    notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    message: Mapped[str | None] = mapped_column(Text, nullable=True)
 
     def __init__(self, name, resource_type, notes):
         self.name = name

@@ -3,43 +3,25 @@ function successResourceAction () {
 }
 
 function takeResource (name) {
-  const data = {
-    cmd: "take",
-    name : name
-  }
-  const dataToSend = JSON.stringify(data);
-  const url = window.location.origin + "/resource"
+  const url = window.location.origin + "/resource/take/" + name
 
   $.ajax({
     type: "POST",
     url: url,
-    data: dataToSend,
+    data: "",
     success: successResourceAction,
-    dataType: "json",
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
+    dataType: "text",
   });
 }
 
 function releaseResource (name) {
-  const data = {
-    cmd: "release",
-    name : name
-  }
-  const dataToSend = JSON.stringify(data);
-  const url = window.location.origin + "/resource"
+  const url = window.location.origin + "/resource/release/" + name
 
   $.ajax({
     type: "POST",
     url: url,
-    data: dataToSend,
+    data: "",
     success: successResourceAction,
-    dataType: "json",
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
-    },
+    dataType: "",
   });
 }

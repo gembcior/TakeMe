@@ -1,8 +1,11 @@
+from datetime import datetime
+
 from flask import Flask
+from sqlalchemy.exc import NoResultFound
 
 from takeme.api import api_bp
 from takeme.crypto import bcrypt
-from takeme.database import database, migrate
+from takeme.database import User, database, migrate
 from takeme.login import jwt, login_manager
 from takeme.ui import ui_bp
 
@@ -41,6 +44,18 @@ class TestingConfig(Config):
     SQLALCHEMY_DATABASE_URI = "sqlite:///testdb.sqlite"
 
 
+def dateformat(time: datetime, format: str):
+    return time.strftime(format)
+
+
+def fullname(username: str):
+    try:
+        user = database.session.query(User).filter_by(username=username).one()
+    except NoResultFound:
+        return "None"
+    return f"{user.first_name} {user.last_name}"
+
+
 def create_app() -> Flask:
     app = Flask(__name__)
 
@@ -57,6 +72,9 @@ def create_app() -> Flask:
         database.create_all()
 
     app.register_blueprint(ui_bp, url_prefix="/")
-    app.register_blueprint(api_bp, url_prefix="/api")
+    # app.register_blueprint(api_bp, url_prefix="/api")
+
+    app.jinja_env.filters["dateformat"] = dateformat
+    app.jinja_env.filters["fullname"] = fullname
 
     return app

@@ -1,3 +1,20 @@
+{% macro resource_type_image(resource_type) %}
+  {% if resource_type == "asic" %}
+  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-cpu" viewBox="0 0 16 16">
+    <path d="M5 0a.5.5 0 0 1 .5.5V2h1V.5a.5.5 0 0 1 1 0V2h1V.5a.5.5 0 0 1 1 0V2h1V.5a.5.5 0 0 1 1 0V2A2.5 2.5 0 0 1 14 4.5h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14a2.5 2.5 0 0 1-2.5 2.5v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14A2.5 2.5 0 0 1 2 11.5H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2A2.5 2.5 0 0 1 4.5 2V.5A.5.5 0 0 1 5 0m-.5 3A1.5 1.5 0 0 0 3 4.5v7A1.5 1.5 0 0 0 4.5 13h7a1.5 1.5 0 0 0 1.5-1.5v-7A1.5 1.5 0 0 0 11.5 3zM5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5zM6.5 6a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"/>
+  </svg>
+  {% elif resource_type == "fpga" %}
+  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-motherboard" viewBox="0 0 16 16">
+    <path d="M11.5 2a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5m2 0a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5m-10 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1zm0 2a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1zM5 3a1 1 0 0 0-1 1h-.5a.5.5 0 0 0 0 1H4v1h-.5a.5.5 0 0 0 0 1H4a1 1 0 0 0 1 1v.5a.5.5 0 0 0 1 0V8h1v.5a.5.5 0 0 0 1 0V8a1 1 0 0 0 1-1h.5a.5.5 0 0 0 0-1H9V5h.5a.5.5 0 0 0 0-1H9a1 1 0 0 0-1-1v-.5a.5.5 0 0 0-1 0V3H6v-.5a.5.5 0 0 0-1 0zm0 1h3v3H5zm6.5 7a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h2a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"/>
+    <path d="M1 2a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-2H.5a.5.5 0 0 1-.5-.5v-1A.5.5 0 0 1 .5 9H1V8H.5a.5.5 0 0 1-.5-.5v-1A.5.5 0 0 1 .5 6H1V5H.5a.5.5 0 0 1-.5-.5v-2A.5.5 0 0 1 .5 2zm1 11a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1z"/>
+  </svg>
+  {% else %}
+  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-pc-display" viewBox="0 0 16 16">
+    <path d="M8 1a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1zm1 13.5a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0m2 0a.5.5 0 1 0 1 0 .5.5 0 0 0-1 0M9.5 1a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zM9 3.5a.5.5 0 0 0 .5.5h5a.5.5 0 0 0 0-1h-5a.5.5 0 0 0-.5.5M1.5 2A1.5 1.5 0 0 0 0 3.5v7A1.5 1.5 0 0 0 1.5 12H6v2h-.5a.5.5 0 0 0 0 1H7v-4H1.5a.5.5 0 0 1-.5-.5v-7a.5.5 0 0 1 .5-.5H7V2z"/>
+  </svg>
+  {% endif %}
+{% endmacro %}
+
 {% macro resource_group_item(resource) %}
 
   <div class="list-group-item">
@@ -5,12 +22,10 @@
     <div class="d-flex justify-content-between align-items-center">
       <div class="d-flex justify-content-start align-items-center">
 
-        <div class="d-flex align-items-center p-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ resource.name }}" aria-expanded="false" aria-controls="collapse{{ resource.name }}">
-          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-cpu" viewBox="0 0 16 16">
-            <path d="M5 0a.5.5 0 0 1 .5.5V2h1V.5a.5.5 0 0 1 1 0V2h1V.5a.5.5 0 0 1 1 0V2h1V.5a.5.5 0 0 1 1 0V2A2.5 2.5 0 0 1 14 4.5h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14a2.5 2.5 0 0 1-2.5 2.5v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14A2.5 2.5 0 0 1 2 11.5H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2A2.5 2.5 0 0 1 4.5 2V.5A.5.5 0 0 1 5 0m-.5 3A1.5 1.5 0 0 0 3 4.5v7A1.5 1.5 0 0 0 4.5 13h7a1.5 1.5 0 0 0 1.5-1.5v-7A1.5 1.5 0 0 0 11.5 3zM5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5zM6.5 6a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"/>
-          </svg>
+        <a class="d-flex align-items-center p-2 link-body-emphasis link-underline link-underline-opacity-0 link-opacity-75-hover" href="{{ url_for('ui.resource.get_by_name', name=resource.name) }}">
+          {{ resource_type_image(resource.resource_type) }}
           <span class="fs-4 ms-2">{{ resource.name }}</span>
-        </div>
+        </a>
 
       {% if resource.taken %}
         <span class="badge rounded-pill text-bg-danger">Taken</span>
@@ -20,31 +35,51 @@
       </div>
 
 
-    {% if resource.taken %}
-    <button type="button" class="btn btn-secondary" onclick="releaseResource('{{ resource.name }}')">Release</button>
-    {% else %}
-    <button type="button" class="btn btn-primary" onclick="takeResource('{{ resource.name }}')">Take</button>
-    {% endif %}
+    <div class="d-flex align-items-center justify-content-between">
+      {% if current_user.is_authenticated %}
+        {% if resource.taken %}
+          {% if current_user.username == resource.taken_by %}
+          <button type="button" class="btn btn-success mx-2">Message</button>
+          <button type="button" class="btn btn-secondary mx-2" onclick="releaseResource('{{ resource.name }}')">Release</button>
+          {% else %}
+          <button type="button" class="btn btn-outline-primary mx-2" onclick="takeResource('{{ resource.name }}')" disabled>Take</button>
+          {% endif %}
+        {% else %}
+        <button type="button" class="btn btn-primary mx-2" onclick="takeResource('{{ resource.name }}')">Take</button>
+        {% endif %}
+      {% endif %}
+      <button type="button" class="btn btn-light mx-2" data-bs-toggle="collapse" data-bs-target="#collapse{{ resource.name }}" aria-expanded="false" aria-controls="collapse{{ resource.name }}">Info</button>
+    </div>
 
     </div>
 
     <div class="mx-2">
-      <span>Some notes</span>
+      <span>{{ resource.note }}</span>
     </div>
 
-    <div class="collapse" id="collapse{{ resource.name }}">
+    <div class="collapse mx-2 mt-4" id="collapse{{ resource.name }}">
 
-    {% if resource.taken %}
-    <div class="mt-2">
-      <div class="px-2 py-1 text-warning-emphasis bg-warning-subtle border border-warning-subtle rounded-2">
-        <div class="d-flex flex-column justify-content-start">
-          <span>Taken by: <b class="fw-bold">{{ resource.taken_by}}</b></span>
-          <span>Time: <b class="fw-bold">{{ resource.taken_on}}</b></span>
-          <span>Message: <b class="fw-bold">Message placeholder for now</b></span>
-        </div>
-      </div>
-    </div>
-    {% endif %}
+    <dl class="row">
+      <dt class="col-sm-2">Status</dt>
+      {% if resource.taken %}
+      <dd class="col-sm-10">Taken</dd>
+      {% else %}
+      <dd class="col-sm-10">Free</dd>
+      {% endif %}
+      <hr>
+      <dt class="col-sm-2">Taken by</dt>
+      <dd class="col-sm-10">{{ resource.taken_by | fullname }}</dd>
+      <hr>
+      <dt class="col-sm-2">Taken on</dt>
+      {% if resource.taken %}
+      <dd class="col-sm-10">{{ resource.taken_on | dateformat("%d/%m/%y %H:%M:%S") }}</dd>
+      {% else %}
+      <dd class="col-sm-10">None</dd>
+      {% endif %}
+      <hr>
+      <dt class="col-sm-2">Message</dt>
+      <dd class="col-sm-10">Message placeholder for now</dd>
+    </dl>
 
     </div>
 

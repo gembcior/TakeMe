@@ -2,6 +2,7 @@ from flask import Blueprint
 from flask import current_app as app
 from flask import redirect, render_template
 from flask_login import current_user, login_required, login_user, logout_user
+from sqlalchemy.exc import NoResultFound
 
 from takeme.crypto import bcrypt
 from takeme.database import User, database
@@ -16,13 +17,18 @@ def login():
         return redirect("/")
     form = LoginUserForm()
     if form.validate_on_submit():
-        user = database.session.query(User).filter_by(username=form.username.data).one()
-        if user and bcrypt.check_password_hash(user.password, form.password.data):
-            login_user(user, remember=form.remember_me.data)
-            app.logger.info(f"User {user.username} logged in")
-            return redirect("/")
+        try:
+            user = database.session.query(User).filter_by(username=form.username.data).one()
+        except NoResultFound:
+            form.username.errors.append("Invalid username")
         else:
-            app.logger.warning("Invalid username and/or password")
+            if user and bcrypt.check_password_hash(user.password, form.password.data):
+                login_user(user, remember=form.remember_me.data)
+                app.logger.info(f"User {user.username} logged in")
+                return redirect("/")
+            else:
+                app.logger.warning("Invalid username and/or password")
+                form.password.errors.append("Invalid password")
     return render_template("login.html", form=form)
 
 
