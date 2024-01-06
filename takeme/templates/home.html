@@ -15,76 +15,100 @@
   {% endif %}
 {% endmacro %}
 
-{% macro resource_group_item(resource) %}
 
-  <div class="list-group-item">
+{% macro resource_name_block(resource) %}
 
-    <div class="d-flex justify-content-between align-items-center">
-      <div class="d-flex justify-content-start align-items-center">
+<div class="d-flex justify-content-between align-items-center flex-wrap">
 
-        <a class="d-flex align-items-center p-2 link-body-emphasis link-underline link-underline-opacity-0 link-opacity-75-hover" href="{{ url_for('ui.resource.get_by_name', name=resource.name) }}">
-          {{ resource_type_image(resource.resource_type) }}
-          <span class="fs-4 ms-2">{{ resource.name }}</span>
-        </a>
-
+  <div class="col-4">
+    <div class="d-flex justify-content-start align-items-center flex-wrap">
+      {{ resource_type_image(resource.resource_type) }}
+      <a class="fs-4 link-body-emphasis link-underline link-underline-opacity-0 link-opacity-75-hover mx-2" href="{{ url_for('ui.resource.get_by_name', name=resource.name) }}">
+        {{ resource.name }}
+      </a>
       {% if resource.taken %}
-        <span class="badge rounded-pill text-bg-danger">Taken</span>
+      <span class="badge rounded-pill text-bg-danger mt-1">Taken</span>
       {% else %}
-        <span class="badge rounded-pill text-bg-success">Free</span>
+      <span class="badge rounded-pill text-bg-success mt-1">Free</span>
       {% endif %}
-      </div>
+    </div>
+  </div>
 
+  <div class="col-4">
+    <div class="d-flex justify-content-start align-items-center flex-wrap">
+      <span class="text-truncate">{{ resource.message }}</span>
+    </div>
+  </div>
 
-    <div class="d-flex align-items-center justify-content-between">
+  <div class="col-4">
+    <div class="d-flex justify-content-end align-items-center flex-wrap">
       {% if current_user.is_authenticated %}
         {% if resource.taken %}
           {% if current_user.username == resource.taken_by %}
-          <button type="button" class="btn btn-success mx-2">Message</button>
-          <button type="button" class="btn btn-secondary mx-2" onclick="releaseResource('{{ resource.name }}')">Release</button>
+          <button type="button" class="btn btn-success mx-2 mt-1"  data-bs-toggle="modal" data-bs-target="#messageModal" data-bs-resource="{{ resource.name }}">Message</button>
+          <button type="button" class="btn btn-secondary mx-2 mt-1" onclick="releaseResource('{{ resource.name }}')">Release</button>
           {% else %}
-          <button type="button" class="btn btn-outline-primary mx-2" onclick="takeResource('{{ resource.name }}')" disabled>Take</button>
+          <button type="button" class="btn btn-outline-primary mx-2 mt-1" onclick="takeResource('{{ resource.name }}')" disabled>Take</button>
           {% endif %}
         {% else %}
-        <button type="button" class="btn btn-primary mx-2" onclick="takeResource('{{ resource.name }}')">Take</button>
+        <button type="button" class="btn btn-primary mx-2 mt-1" onclick="takeResource('{{ resource.name }}')">Take</button>
         {% endif %}
       {% endif %}
-      <button type="button" class="btn btn-light mx-2" data-bs-toggle="collapse" data-bs-target="#collapse{{ resource.name }}" aria-expanded="false" aria-controls="collapse{{ resource.name }}">Info</button>
+      <button type="button" class="btn btn-light mx-2 mt-1" data-bs-toggle="collapse" data-bs-target="#collapse{{ resource.name }}" aria-expanded="false" aria-controls="collapse{{ resource.name }}">Info</button>
     </div>
+  </div>
 
-    </div>
+</div>
 
-    <div class="mx-2">
-      <span>{{ resource.note }}</span>
-    </div>
+{% endmacro %}
 
-    <div class="collapse mx-2 mt-4" id="collapse{{ resource.name }}">
 
+{% macro resource_note_block(resource) %}
+<div class="d-flex flex-row align-items-center mx-2 mt-2">
+  <span>{{ resource.notes }}</span>
+</div>
+{% endmacro %}
+
+
+{% macro resource_info_block(resource) %}
+<div class="collapse" id="collapse{{ resource.name }}">
+  <div class="mx-2 my-2">
     <dl class="row">
-      <dt class="col-sm-2">Status</dt>
+      <dt class="col-2">Status</dt>
       {% if resource.taken %}
-      <dd class="col-sm-10">Taken</dd>
+      <dd class="col-10">Taken</dd>
       {% else %}
-      <dd class="col-sm-10">Free</dd>
+      <dd class="col-10">Free</dd>
       {% endif %}
       <hr>
-      <dt class="col-sm-2">Taken by</dt>
-      <dd class="col-sm-10">{{ resource.taken_by | fullname }}</dd>
+      <dt class="col-2">Taken by</dt>
+      <dd class="col-10">{{ resource.taken_by | fullname }}</dd>
       <hr>
-      <dt class="col-sm-2">Taken on</dt>
+      <dt class="col-2">Taken on</dt>
       {% if resource.taken %}
-      <dd class="col-sm-10">{{ resource.taken_on | dateformat("%d/%m/%y %H:%M:%S") }}</dd>
+      <dd class="col-10">{{ resource.taken_on | dateformat("%d/%m/%y %H:%M:%S") }}</dd>
       {% else %}
-      <dd class="col-sm-10">None</dd>
+      <dd class="col-10">None</dd>
       {% endif %}
       <hr>
-      <dt class="col-sm-2">Message</dt>
-      <dd class="col-sm-10">Message placeholder for now</dd>
+      <dt class="col-2">Message</dt>
+      <dd class="col-10">{{ resource.message }}</dd>
     </dl>
+  </div>
+</div>
+{% endmacro %}
 
-    </div>
+
+{% macro resource_group_item(resource) %}
+  <div class="list-group-item">
+
+    {{ resource_name_block(resource) }}
+    {{ resource_note_block(resource) }}
+    {{ resource_info_block(resource) }}
 
   </div>
 {% endmacro %}
+
 
 {% extends 'base.html' %}
 
@@ -92,11 +116,33 @@
 
 <div class="list-group">
 
-  {% for res in resources %}
-    {{ resource_group_item(res) }}
-  {% endfor %}
+{% for res in resources %}
+  {{ resource_group_item(res) }}
+{% endfor %}
 
+</div>
 
+<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="messageModalLabel">Set message</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="message-text" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="messageText"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="setMsgModalButton">Set message</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 {% endblock content %}

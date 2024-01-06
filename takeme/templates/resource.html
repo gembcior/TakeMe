@@ -2,6 +2,39 @@
 
 {% block content %}
 
-<h5>{{ resource.name }}</h5>
+<div class="form-add-resource w-100 m-auto">
+
+<h1 class="h3 mb-3 fw-normal">Update {{ resource.name }}</h1>
+
+<form class="align-items-center needs-validation" action="{{ url_for('ui.resource.update_by_name', name= resource.name) }}" method="POST" novalidate>
+
+  {{ form.hidden_tag() }}
+
+  <div class="row my-2">
+    <div class="col">
+      <label>{{ form.name.label }}</label>
+      {{ form.name(class_="form-control", required="true") }}
+    </div>
+
+    <div class="col-md-4">
+      <label>{{ form.resource_type.label }}</label>
+      {{ form.resource_type(class_="form-select", required="true") }}
+    </div>
+  </div>
+
+  <div class="row my-2">
+    <div class="col">
+      <label>{{ form.notes.label }}</label>
+      {{ form.notes(class_="form-control", required="true") }}
+    </div>
+  </div>
+
+  <div class="my-2">
+    {{ form.submit(class_="btn btn-primary") }}
+  </div>
+
+</form>
+
+</div>
 
 {% endblock content %}

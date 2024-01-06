@@ -1,9 +1,9 @@
-from datetime import datetime
+from datetime import datetime, time
 
 from flask_login import UserMixin
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Boolean, DateTime, Integer, String, Text
+from sqlalchemy import Boolean, DateTime, Integer, String, Text, Time
 from sqlalchemy.orm import Mapped, mapped_column
 
 from takeme.crypto import bcrypt
@@ -39,9 +39,19 @@ class Resource(database.Model):
     resource_type: Mapped[str] = mapped_column(String, nullable=False)
     taken_on: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
-    message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    message: Mapped[str] = mapped_column(Text, nullable=False, default="")
 
     def __init__(self, name, resource_type, notes):
         self.name = name
         self.resource_type = resource_type
         self.notes = notes
+
+
+class Settigns(database.Model):
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    auto_release: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    auto_release_time: Mapped[time] = mapped_column(Time, nullable=False)
+
+    def __init__(self, auto_release, auto_release_time):
+        self.auto_release = auto_release
+        self.auto_release_time = auto_release_time

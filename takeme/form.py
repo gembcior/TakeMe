@@ -6,6 +6,7 @@ from wtforms import (
     StringField,
     SubmitField,
     TextAreaField,
+    TimeField,
     ValidationError,
 )
 from wtforms.validators import DataRequired, EqualTo, Length
@@ -71,3 +72,16 @@ class AddResourceForm(FlaskForm):
     notes = TextAreaField("Notes")
     resource_type = SelectField("Resource type", choices=[("fpga", "FPGA"), ("asic", "ASIC"), ("other", "Other")], default="other")
     submit = SubmitField("Add resource")
+
+
+class SettingsForm(FlaskForm):
+    auto_release = BooleanField("Auto release")
+    auto_release_time = TimeField("Auto release at", validators=[DataRequired()])
+    submit = SubmitField("Save")
+
+
+class ResourceUpdateForm(FlaskForm):
+    name = StringField("Resource name", validators=[DataRequired()])
+    notes = TextAreaField("Notes")
+    resource_type = SelectField("Resource type", choices=[("fpga", "FPGA"), ("asic", "ASIC"), ("other", "Other")], default="other")
+    submit = SubmitField("Update")
