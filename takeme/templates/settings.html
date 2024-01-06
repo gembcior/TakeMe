@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="form-settings w-100 m-auto">
+
+<h1 class="h3 mb-3 fw-normal">Settings</h1>
+
+<form class="needs-validation" action="" method="POST" novalidate>
+
+  {{ form.hidden_tag() }}
+
+  <div class="row my-2 align-items-center justify-content-end">
+    <label class="col-4 col-form-label">{{ form.auto_release.label }}</label>
+    <div class="col form-check form-switch float-end">
+      {{ form.auto_release(class_="form-check-input float-end", required="true", role="switch") }}
+    </div>
+  </div>
+
+  <div class="row my-2 align-items-center">
+    <label class="col-4 col-form-label">{{ form.auto_release_time.label }}</label>
+    <div class="col">
+      {{ form.auto_release_time(class_="form-control bs-timepicker w-auto float-end", required="true") }}
+    </div>
+  </div>
+
+  <div class="row my-4">
+    {{ form.submit(class_="btn btn-primary") }}
+  </div>
+
+</form>
+
+</div>
+
+
+{% endblock content %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/timepicker/timepicker.css') }}">
+{% endblock styles %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/timepicker/timepicker.js') }}"></script>
+<script>
+  $(function () {
+    $('.bs-timepicker').timepicker();
+  });
+</script>
+{% endblock scripts %}
