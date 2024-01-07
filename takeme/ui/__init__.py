@@ -1,9 +1,13 @@
 from datetime import time
 
-from flask import Blueprint, redirect, render_template
+from flask import Blueprint
+from flask import current_app as app
+from flask import redirect, render_template
+from flask_socketio import emit
 
 from takeme.database import Resource, Settigns, database
 from takeme.form import SettingsForm
+from takeme.socketio import socketio
 from takeme.ui.auth import auth_bp
 from takeme.ui.resource import resource_bp
 
@@ -45,3 +49,14 @@ def settings_post():
         database.session.commit()
         return redirect("/")
     return render_template("settings.html", form=form)
+
+
+@socketio.on("connect")
+def test_connect():
+    app.logger.info(f"SocketIO client connected")
+    emit("after connect", {"data": "Connected"})
+
+
+@socketio.on("disconnect")
+def test_disconnect():
+    app.logger.info(f"SocketIO client disconnected")

@@ -5,7 +5,7 @@ from takeme.database import User
 
 login_manager = LoginManager()
 
-login_manager.login_view = "pages.login"
+login_manager.login_view = "ui.auth.login"
 login_manager.login_message_category = "info"
 
 

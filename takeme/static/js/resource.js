@@ -99,3 +99,14 @@ if (messageModal) {
     })
   }
 }
+
+$(document).ready(function() {
+  var socket = io.connect();
+
+  socket.on('after connect', function(msg) {
+  });
+
+  socket.on("resource update", function() {
+    location.reload()
+  })
+});

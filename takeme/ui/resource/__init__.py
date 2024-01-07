@@ -6,6 +6,7 @@ from sqlalchemy.exc import NoResultFound
 
 from takeme.database import Resource, database
 from takeme.form import AddResourceForm, ResourceUpdateForm
+from takeme.socketio import socketio
 
 resource_bp = Blueprint("resource", __name__)
 
@@ -22,6 +23,7 @@ def add():
         )
         database.session.add(resource)
         database.session.commit()
+        socketio.emit("resource update", {'name': resource.name})
         return redirect("/")
     return render_template("add.html", form=form)
 
@@ -38,6 +40,7 @@ def take_by_name(name):
     resource.taken_on = datetime.now()
     resource.message = ""
     database.session.commit()
+    socketio.emit("resource update", {'name': name})
     return make_response({"ok": "true"}, 200)
 
 
@@ -52,6 +55,7 @@ def release_by_name(name):
     resource.taken_by = None
     resource.taken_on = None
     database.session.commit()
+    socketio.emit("resource update", {'name': name})
     return make_response({"ok": "true"}, 200)
 
 
@@ -81,6 +85,7 @@ def update_by_name(name):
         resource.resource_type = form.resource_type.data
         resource.notes = form.notes.data
         database.session.commit()
+        socketio.emit("resource update", {'name': name})
         return redirect("/")
     return render_template("resource.html", resource=resource, form=form)
 
@@ -101,4 +106,5 @@ def msg_by_name(name):
         return make_response({"error": f"No resource found with name {name}"}, 400)
     resource.message = data
     database.session.commit()
+    socketio.emit("resource update", {'name': name})
     return make_response({"ok": "true"}, 200)

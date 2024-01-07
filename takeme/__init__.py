@@ -8,7 +8,6 @@ from takeme.crypto import bcrypt
 from takeme.database import User, database, migrate
 from takeme.login import jwt, login_manager
 from takeme.ui import ui_bp
-from flask_socketio import SocketIO
 
 
 class Config(object):
