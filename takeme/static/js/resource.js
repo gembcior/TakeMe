@@ -101,12 +101,13 @@ if (messageModal) {
 }
 
 $(document).ready(function() {
-  var socket = io.connect();
+  var socket = io();
+  socket.connect();
 
   socket.on('after connect', function(msg) {
   });
 
   socket.on("resource update", function() {
-    location.reload()
+    location.reload();
   })
 });

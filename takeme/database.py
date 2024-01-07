@@ -39,12 +39,14 @@ class Resource(database.Model):
     resource_type: Mapped[str] = mapped_column(String, nullable=False)
     taken_on: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
-    message: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    message: Mapped[str] = mapped_column(Text, nullable=True, default="")
 
     def __init__(self, name, resource_type, notes):
         self.name = name
         self.resource_type = resource_type
         self.notes = notes
+        self.message = ""
+        self.taken_by = ""
 
 
 class Settigns(database.Model):

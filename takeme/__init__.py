@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import Flask
 from sqlalchemy.exc import NoResultFound
 
-from takeme.api import api_bp
+# from takeme.api import api_bp
 from takeme.crypto import bcrypt
 from takeme.database import User, database, migrate
 from takeme.login import jwt, login_manager
