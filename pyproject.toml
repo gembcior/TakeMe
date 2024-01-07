@@ -15,6 +15,7 @@ classifiers = [
 packages = [{ include = "takeme" }]
 
 [tool.poetry.dependencies]
+eventlet = "^0.34"
 flask = "^3.0"
 flask-apscheduler = "^1.13"
 flask-bcrypt = "^1.0"
@@ -24,6 +25,7 @@ flask-migrate = "^4.0"
 flask-socketio = "^5.3"
 flask-sqlalchemy = "^3.1"
 flask-wtf = "^1.2"
+gunicorn = "^21.2"
 python = "^3.12"
 rich = "^12.5"
 sqlalchemy = "^2.0"
