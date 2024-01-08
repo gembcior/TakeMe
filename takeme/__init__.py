@@ -10,38 +10,36 @@ from takeme.login import jwt, login_manager
 from takeme.ui import ui_bp
 
 
-class Config(object):
-    TESTING = False
-    DEBUG = False
-    CSRF_ENABLED = True
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
+class AppConfig(object):
     BCRYPT_LOG_ROUNDS = 13
-    WTF_CSRF_ENABLED = True
-    SECRET_KEY = "192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf"
-    JWT_TOKEN_LOCATION = ["headers", "cookies"]
-    JWT_SECRET_KEY = "192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf"
-    JWT_COOKIE_SECURE = False
-
-
-class ProductionConfig(Config):
+    CSRF_ENABLED = True
     DATABASE_URI = "sqlite:///db.sqlite"
-
-
-class DevelopmentConfig(Config):
+    DEBUG = True
     DEVELOPMENT = True
-    DEBUG = True
-    WTF_CSRF_ENABLED = False
-    DATABASE_URI = "sqlite:///db.sqlite"
+    JWT_COOKIE_SECURE = False
+    JWT_SECRET_KEY = "192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf"
+    JWT_TOKEN_LOCATION = ["headers", "cookies"]
+    SECRET_KEY = "192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf"
     SQLALCHEMY_DATABASE_URI = "sqlite:///db.sqlite"
-
-
-class TestingConfig(Config):
-    TESTING = True
-    DEBUG = True
-    BCRYPT_LOG_ROUNDS = 1
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    TESTING = False
     WTF_CSRF_ENABLED = False
+
+
+class ProductionConfig(object):
+    BCRYPT_LOG_ROUNDS = 32
+    CSRF_ENABLED = True
     DATABASE_URI = "sqlite:///db.sqlite"
-    SQLALCHEMY_DATABASE_URI = "sqlite:///testdb.sqlite"
+    DEBUG = False
+    DEVELOPMENT = False
+    JWT_COOKIE_SECURE = True
+    JWT_SECRET_KEY = "192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf"
+    JWT_TOKEN_LOCATION = ["headers", "cookies"]
+    SECRET_KEY = "192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf"
+    SQLALCHEMY_DATABASE_URI = "sqlite:///db.sqlite"
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
+    TESTING = False
+    WTF_CSRF_ENABLED = True
 
 
 def dateformat(time: datetime, format: str):
@@ -57,10 +55,11 @@ def fullname(username: str):
 
 
 def create_app() -> Flask:
-    app = Flask(__name__)
+    app = Flask(__name__, instance_relative_config=True)
 
-    cfg = DevelopmentConfig()
+    cfg = AppConfig()
     app.config.from_object(cfg)
+    app.config.from_pyfile("application.cfg", silent=True)
 
     jwt.init_app(app)
     login_manager.init_app(app)

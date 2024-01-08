@@ -1,0 +1,13 @@
+services:
+  takeme:
+    image: takeme
+    build:
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - '8000:9000'
+    volumes:
+      - takeme-instance:/opt/TakeMe/instance
+
+volumes:
+  takeme-instance:

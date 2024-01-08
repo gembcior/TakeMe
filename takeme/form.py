@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from sqlalchemy.exc import NoResultFound
 from wtforms import (
     BooleanField,
     PasswordField,
@@ -46,7 +47,10 @@ class UniqueUserValidator:
         self.message = message
 
     def __call__(self, form, field):
-        user = database.session.query(User).filter_by(username=field.data).one()
+        try:
+            user = database.session.query(User).filter_by(username=field.data).one()
+        except NoResultFound:
+            return
         if user:
             raise ValidationError(self.message)
 

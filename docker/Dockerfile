@@ -15,21 +15,18 @@ RUN apt-get update && \
     python3.12-full \
     git
 
-RUN python3.12 -m ensurepip --upgrade
-
-RUN python3.12 -m pip install --upgrade setuptools && \
-    python3.12 -m pip install --upgrade pip
-
-RUN python3.12 -m pip install \
-    poetry \
-    eventlet \
-    gunicorn
+RUN python3.12 -m ensurepip --upgrade && \
+    python3.12 -m pip install --upgrade pip && \
+    python3.12 -m pip install \
+    poetry
 
 WORKDIR /opt
 
 RUN git clone https://github.com/gembcior/TakeMe.git && \
-    poetry config virtualenvs.create false && \
     cd TakeMe && \
+    mkdir instance && \
     poetry install
 
-CMD gunicorn --worker-class eventlet -w 1 --threads 100 takeme.run:app -b 0.0.0.0
+WORKDIR /opt/TakeMe
+
+CMD poetry run gunicorn --worker-class eventlet -w 1 --threads 100 takeme.run:app -b 0.0.0.0
