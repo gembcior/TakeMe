@@ -23,7 +23,7 @@
   <div class="col-4">
     <div class="d-flex justify-content-start align-items-center flex-wrap">
       {{ resource_type_image(resource.resource_type) }}
-      <a class="fs-4 link-body-emphasis link-underline link-underline-opacity-0 link-opacity-75-hover mx-2" href="{{ url_for('ui.resource.get_by_name', name=resource.name) }}">
+      <a class="fs-4 link-body-emphasis link-underline link-underline-opacity-0 link-opacity-75-hover mx-2" href="{{ url_for('ui.resource.get_by_id', id=resource.id) }}">
         {{ resource.name }}
       </a>
       {% if resource.taken %}
@@ -45,16 +45,16 @@
       {% if current_user.is_authenticated %}
         {% if resource.taken %}
           {% if current_user.username == resource.taken_by %}
-          <button type="button" class="btn btn-success mx-2 mt-1"  data-bs-toggle="modal" data-bs-target="#messageModal" data-bs-resource="{{ resource.name }}">Message</button>
-          <button type="button" class="btn btn-secondary mx-2 mt-1" onclick="releaseResource('{{ resource.name }}')">Release</button>
+      <button type="button" class="btn btn-success mx-2 mt-1"  data-bs-toggle="modal" data-bs-target="#messageModal" data-bs-resource="{{ resource.name }}" data-bs-resource-id="{{ resource.id }}">Message</button>
+          <button type="button" class="btn btn-secondary mx-2 mt-1" onclick="releaseResource('{{ resource.id }}')">Release</button>
           {% else %}
-          <button type="button" class="btn btn-outline-primary mx-2 mt-1" onclick="takeResource('{{ resource.name }}')" disabled>Take</button>
+          <button type="button" class="btn btn-outline-primary mx-2 mt-1" onclick="" disabled>Take</button>
           {% endif %}
         {% else %}
-        <button type="button" class="btn btn-primary mx-2 mt-1" onclick="takeResource('{{ resource.name }}')">Take</button>
+        <button type="button" class="btn btn-primary mx-2 mt-1" onclick="takeResource('{{ resource.id }}')">Take</button>
         {% endif %}
       {% endif %}
-      <button type="button" class="btn btn-light mx-2 mt-1" data-bs-toggle="collapse" data-bs-target="#collapse{{ resource.name }}" aria-expanded="false" aria-controls="collapse{{ resource.name }}">Info</button>
+      <button type="button" class="btn btn-light mx-2 mt-1" data-bs-toggle="collapse" data-bs-target="#collapse{{ resource.id }}" aria-expanded="false" aria-controls="collapse{{ resource.id }}">Info</button>
     </div>
   </div>
 
@@ -71,7 +71,7 @@
 
 
 {% macro resource_info_block(resource) %}
-<div class="collapse" id="collapse{{ resource.name }}">
+<div class="collapse" id="collapse{{ resource.id }}">
   <div class="mx-2 my-2">
     <dl class="row">
       <dt class="col-2">Status</dt>

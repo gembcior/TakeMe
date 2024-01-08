@@ -13,7 +13,7 @@ from wtforms import (
 from wtforms.validators import DataRequired, EqualTo, Length
 from wtforms.widgets import PasswordInput, TextInput
 
-from takeme.database import User, database
+from takeme.database import Resource, User, database
 
 
 class MyTextInput(TextInput):
@@ -48,10 +48,27 @@ class UniqueUserValidator:
 
     def __call__(self, form, field):
         try:
-            user = database.session.query(User).filter_by(username=field.data).one()
+            username = field.data.strip()
+            user = database.session.query(User).filter_by(username=username).one()
         except NoResultFound:
             return
         if user:
+            raise ValidationError(self.message)
+
+
+class UniqueResourceName:
+    def __init__(self, message=None):
+        if message is None:
+            message = "Resource already exists"
+        self.message = message
+
+    def __call__(self, form, field):
+        try:
+            name = field.data.strip()
+            resource = database.session.query(Resource).filter_by(name=name).one()
+        except NoResultFound:
+            return
+        if resource:
             raise ValidationError(self.message)
 
 
@@ -72,7 +89,7 @@ class LoginUserForm(FlaskForm):
 
 
 class AddResourceForm(FlaskForm):
-    name = StringField("Resource name", validators=[DataRequired()])
+    name = StringField("Resource name", validators=[DataRequired(), UniqueResourceName()])
     notes = TextAreaField("Notes")
     resource_type = SelectField("Resource type", choices=[("fpga", "FPGA"), ("asic", "ASIC"), ("other", "Other")], default="other")
     submit = SubmitField("Add resource")

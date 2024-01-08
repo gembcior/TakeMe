@@ -6,7 +6,7 @@
 
 <h1 class="h3 mb-3 fw-normal">Update {{ resource.name }}</h1>
 
-<form class="align-items-center needs-validation" action="{{ url_for('ui.resource.update_by_name', name= resource.name) }}" method="POST" novalidate>
+<form class="align-items-center needs-validation" action="{{ url_for('ui.resource.update_by_id', id=resource.id) }}" method="POST" novalidate>
 
   {{ form.hidden_tag() }}
 
@@ -29,10 +29,16 @@
     </div>
   </div>
 
-  <div class="my-2">
+  <div class="my-4">
     {{ form.submit(class_="btn btn-primary") }}
   </div>
 
+</form>
+
+<hr class="my-4">
+
+<form class="d-flex justify-content-end align-items-center mt-4" action="{{ url_for('ui.resource.rm_by_id', id=resource.id) }}" method="POST">
+  <button type="submit" class="btn btn-danger">Delete</button>
 </form>
 
 </div>

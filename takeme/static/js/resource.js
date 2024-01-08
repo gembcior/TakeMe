@@ -2,29 +2,8 @@ function successResourceAction () {
   window.location.href = window.location.origin
 }
 
-// function takeResource (name) {
-//   const data = {
-//     cmd: "take",
-//     name : name
-//   }
-//   const dataToSend = JSON.stringify(data);
-//   const url = window.location.origin + "/resource"
-
-//   $.ajax({
-//     type: "POST",
-//     url: url,
-//     data: dataToSend,
-//     success: successResourceAction,
-//     dataType: "json",
-//     headers: {
-//       'Accept': 'application/json',
-//       'Content-Type': 'application/json'
-//     },
-//   });
-// }
-
-function takeResource (name) {
-  const url = window.location.origin + "/resource/take/" + name
+function takeResource (id) {
+  const url = window.location.origin + "/resource/take/" + id
 
   $.ajax({
     type: "POST",
@@ -35,8 +14,8 @@ function takeResource (name) {
   });
 }
 
-function releaseResource (name) {
-  const url = window.location.origin + "/resource/release/" + name
+function releaseResource (id) {
+  const url = window.location.origin + "/resource/release/" + id
 
   $.ajax({
     type: "POST",
@@ -47,13 +26,13 @@ function releaseResource (name) {
   });
 }
 
-function setResourceMsg (name, msg) {
+function setResourceMsg (id, msg) {
   const data = {
     cmd: "msg",
     data : msg
   }
   const dataToSend = JSON.stringify(data);
-  const url = window.location.origin + "/resource/msg/" + name
+  const url = window.location.origin + "/resource/msg/" + id
 
   $.ajax({
     type: "PUT",
@@ -73,11 +52,13 @@ if (messageModal) {
   messageModal.addEventListener('show.bs.modal', event => {
     const button = event.relatedTarget
     const recipient = button.getAttribute('data-bs-resource')
+    const recipientId = button.getAttribute('data-bs-resource-id')
     const modalTitle = messageModal.querySelector('#messageModalLabel')
     const modalSubmit = messageModal.querySelector('#setMsgModalButton')
 
     modalTitle.textContent = `Set message for ${recipient}`
     modalSubmit.setAttribute('data-bs-resource', recipient)
+    modalSubmit.setAttribute('data-bs-resource-id', recipientId)
   })
 
   messageModal.addEventListener('hidden.bs.modal', event => {
@@ -92,10 +73,10 @@ if (messageModal) {
   if (messageSetButton) {
     messageSetButton.addEventListener('click', function() {
 
-      const recipient = messageSetButton.getAttribute('data-bs-resource')
+      const recipientId = messageSetButton.getAttribute('data-bs-resource-id')
       const messageText = messageModal.querySelector('#messageText')
       $('#messageModal').modal('hide');
-      setResourceMsg(recipient, messageText.value)
+      setResourceMsg(recipientId, messageText.value)
     })
   }
 }
@@ -108,6 +89,6 @@ $(document).ready(function() {
   });
 
   socket.on("resource update", function() {
-    location.reload();
+    // location.reload();
   })
 });
