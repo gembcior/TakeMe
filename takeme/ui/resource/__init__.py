@@ -149,4 +149,4 @@ def get_list_item_by_id(id):
     resource = get_resource(id)
     if resource is None:
         abort(404)
-    return render_template("resource_item.html", resource=resource)
+    return render_template("resource_list_item.html", resource=resource)
