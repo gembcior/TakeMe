@@ -24,9 +24,19 @@ WORKDIR /opt
 
 RUN git clone https://github.com/gembcior/TakeMe.git && \
     cd TakeMe && \
-    mkdir instance && \
-    poetry install
+    poetry build
 
-WORKDIR /opt/TakeMe
+RUN pip install --ignore-installed TakeMe/dist/*.whl && \
+    mkdir -p /usr/var/takeme-instance
 
-CMD poetry run gunicorn --worker-class eventlet -w 1 --threads 100 takeme.run:app -b 0.0.0.0
+WORKDIR /usr/var/takeme-instance
+
+RUN echo "BCRYPT_LOG_ROUNDS = 12" >> application.cfg && \
+    echo "CSRF_ENABLED = True" >> application.cfg && \
+    echo "DEBUG = False" >> application.cfg && \
+    echo "DEVELOPMENT = False" >> application.cfg && \
+    echo "SQLALCHEMY_TRACK_MODIFICATIONS = True" >> application.cfg && \
+    echo "WTF_CSRF_ENABLED = True" >> application.cfg && \
+    echo "SECRET_KEY = '$(python3.12 -c 'import secrets; print(secrets.token_hex())')'" >> application.cfg
+
+CMD gunicorn --worker-class eventlet -w 1 --threads 100 takeme.run:app -b 0.0.0.0

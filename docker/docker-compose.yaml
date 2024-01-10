@@ -6,8 +6,12 @@ services:
     restart: unless-stopped
     ports:
       - '8000:8000'
+    environment:
+      - TZ=Europe/Warsaw
     volumes:
-      - takeme-instance:/opt/TakeMe/instance
+      - takeme-instance:/usr/var/takeme-instance
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
 
 volumes:
   takeme-instance:
