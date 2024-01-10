@@ -3,10 +3,10 @@ from datetime import datetime
 from flask import Flask
 from sqlalchemy.exc import NoResultFound
 
-# from takeme.api import api_bp
 from takeme.crypto import bcrypt
 from takeme.database import User, database, migrate
 from takeme.login import jwt, login_manager
+from takeme.scheduler import scheduler
 from takeme.ui import ui_bp
 
 
@@ -66,12 +66,12 @@ def create_app() -> Flask:
     bcrypt.init_app(app)
     database.init_app(app)
     migrate.init_app(app, db=database)
+    scheduler.init_app(app)
 
     with app.app_context():
         database.create_all()
 
     app.register_blueprint(ui_bp, url_prefix="/")
-    # app.register_blueprint(api_bp, url_prefix="/api")
 
     app.jinja_env.filters["dateformat"] = dateformat
     app.jinja_env.filters["fullname"] = fullname

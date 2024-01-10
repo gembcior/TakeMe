@@ -14,6 +14,14 @@
     <div class="col">
       <label>{{ form.name.label }}</label>
       {{ form.name(class_="form-control", required="true") }}
+
+      {% if form.name.errors %}
+        {% for error in form.name.errors %}
+          <div class="invalid-feedback">
+            {{ error }}
+          </div>
+        {% endfor %}
+      {% endif %}
     </div>
 
     <div class="col-md-4">
@@ -27,6 +35,14 @@
       <label>{{ form.notes.label }}</label>
       {{ form.notes(class_="form-control", required="true") }}
     </div>
+
+    {% if form.notes.errors %}
+      {% for error in form.notes.errors %}
+        <div class="invalid-feedback">
+          {{ error }}
+        </div>
+      {% endfor %}
+    {% endif %}
   </div>
 
   <div class="my-2">

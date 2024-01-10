@@ -1,21 +1,19 @@
 from flask_apscheduler import APScheduler
 
-from takeme.database import Settigns, database
+from takeme.database import Resource, database
+from takeme.socketio import socketio
 
 scheduler = APScheduler()
 
 
-@scheduler.task("cron", id="auto_release", minute="*")
 def auto_release():
     if scheduler.app is None:
         return
     with scheduler.app.app_context():
-        settings = database.session.query(Settigns).first()
-        if settings is not None:
-            do_release = settings.auto_release
-        else:
-            do_release = False
-        if do_release:
-            print("Auto Release executed")
-        else:
-            print("Auto Release disabled")
+        resources = database.session.query(Resource).all()
+        for res in resources:
+            res.taken = False
+            res.taken_by = None
+            res.taken_on = None
+        database.session.commit()
+        socketio.emit("all resource update")

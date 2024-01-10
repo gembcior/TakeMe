@@ -41,9 +41,9 @@ def add():
     form = AddResourceForm()
     if form.validate_on_submit():
         resource = Resource(
-            name=form.name.data.strip(),
+            name=form.name.data,
             resource_type=form.resource_type.data,
-            notes=form.notes.data.strip(),
+            notes=form.notes.data,
         )
         database.session.add(resource)
         database.session.commit()
@@ -106,7 +106,7 @@ def update_by_id(id):
         # TODO add name validation to prevent update to exising name
         resource.name = form.name.data
         resource.resource_type = form.resource_type.data
-        resource.notes = form.notes.data.strip()
+        resource.notes = form.notes.data
         database.session.commit()
         emit_resource_update(resource.id)
         return redirect("/")
@@ -118,11 +118,11 @@ def update_by_id(id):
 def rm_by_id(id):
     resource = get_resource(id)
     if resource is None:
-        abort(404)
+        return make_response({"error": f"No resource found with id {id}"}, 400)
     database.session.delete(resource)
     database.session.commit()
     emit_resource_update(resource.id)
-    return redirect("/")
+    return make_response({"ok": "true"}, 200)
 
 
 @resource_bp.put("/msg/<id>")

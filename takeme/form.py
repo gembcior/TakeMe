@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from sqlalchemy.exc import NoResultFound
 from wtforms import (
     BooleanField,
+    Field,
     PasswordField,
     SelectField,
     StringField,
@@ -10,34 +11,34 @@ from wtforms import (
     TimeField,
     ValidationError,
 )
-from wtforms.validators import DataRequired, EqualTo, Length
+from wtforms.validators import EqualTo, InputRequired, Length
 from wtforms.widgets import PasswordInput, TextInput
 
 from takeme.database import Resource, User, database
 
 
-class MyTextInput(TextInput):
+class BootstrapTextInput(TextInput):
     def __init__(self, error_class="is-invalid"):
-        super(MyTextInput, self).__init__()
+        super(BootstrapTextInput, self).__init__()
         self.error_class = error_class
 
     def __call__(self, field, **kwargs):
         if field.errors:
             c = kwargs.pop("class", "") or kwargs.pop("class_", "")
             kwargs["class"] = "%s %s" % (self.error_class, c)
-        return super(MyTextInput, self).__call__(field, **kwargs)
+        return super(BootstrapTextInput, self).__call__(field, **kwargs)
 
 
-class MyPasswordInput(PasswordInput):
+class BootstrapPasswordInput(PasswordInput):
     def __init__(self, error_class="is-invalid"):
-        super(MyPasswordInput, self).__init__()
+        super(BootstrapPasswordInput, self).__init__()
         self.error_class = error_class
 
     def __call__(self, field, **kwargs):
         if field.errors:
             c = kwargs.pop("class", "") or kwargs.pop("class_", "")
             kwargs["class"] = "%s %s" % (self.error_class, c)
-        return super(MyPasswordInput, self).__call__(field, **kwargs)
+        return super(BootstrapPasswordInput, self).__call__(field, **kwargs)
 
 
 class UniqueUserValidator:
@@ -72,24 +73,49 @@ class UniqueResourceName:
             raise ValidationError(self.message)
 
 
+class ValidString:
+    def __call__(self, form, field):
+        value: str = field.data
+        if not value.isprintable():
+            raise ValidationError("Only printable characters")
+        if not value.isascii():
+            raise ValidationError("Only ASCII characters")
+
+
+class StrippedNameField(StringField):
+    widget = BootstrapTextInput()
+
+    def process_formdata(self, valuelist):
+        if valuelist:
+            self.data = valuelist[0].strip()
+
+    def process_data(self, value):
+        if value:
+            self.data = value.strip()
+        else:
+            self.data = ""
+
+
 class RegisterUserForm(FlaskForm):
-    first_name = StringField("First Name", validators=[DataRequired(), Length(min=3, max=25)], widget=MyTextInput())
-    last_name = StringField("Last Name", validators=[DataRequired(), Length(min=3, max=25)], widget=MyTextInput())
-    username = StringField("Username", validators=[DataRequired(), Length(min=3, max=25), UniqueUserValidator()], widget=MyTextInput())
-    password = PasswordField("Password", validators=[DataRequired(), Length(min=6, max=25)], widget=MyPasswordInput())
-    confirm = PasswordField("Confirm password", validators=[DataRequired(), EqualTo("password", message="Passwords must match")], widget=MyPasswordInput())
+    first_name = StrippedNameField("First Name", validators=[InputRequired(), Length(min=3, max=25), ValidString()])
+    last_name = StrippedNameField("Last Name", validators=[InputRequired(), Length(min=3, max=25), ValidString()])
+    username = StrippedNameField("Username", validators=[InputRequired(), Length(min=3, max=25), UniqueUserValidator(), ValidString()])
+    password = PasswordField("Password", validators=[InputRequired(), Length(min=6, max=25), ValidString()], widget=BootstrapPasswordInput())
+    confirm = PasswordField(
+        "Confirm password", validators=[InputRequired(), EqualTo("password", message="Passwords must match"), ValidString()], widget=BootstrapPasswordInput()
+    )
     submit = SubmitField("Sign up")
 
 
 class LoginUserForm(FlaskForm):
-    username = StringField("Username", validators=[DataRequired()], widget=MyTextInput())
-    password = PasswordField("Password", validators=[DataRequired()], widget=MyPasswordInput())
+    username = StrippedNameField("Username", validators=[InputRequired(), ValidString()])
+    password = PasswordField("Password", validators=[InputRequired(), ValidString()], widget=BootstrapPasswordInput())
     remember_me = BooleanField("Remember me")
     submit = SubmitField("Sign in")
 
 
 class AddResourceForm(FlaskForm):
-    name = StringField("Resource name", validators=[DataRequired(), UniqueResourceName()])
+    name = StrippedNameField("Resource name", validators=[InputRequired(), UniqueResourceName(), ValidString(), Length(min=3, max=25)])
     notes = TextAreaField("Notes")
     resource_type = SelectField("Resource type", choices=[("fpga", "FPGA"), ("asic", "ASIC"), ("other", "Other")], default="other")
     submit = SubmitField("Add resource")
@@ -97,12 +123,12 @@ class AddResourceForm(FlaskForm):
 
 class SettingsForm(FlaskForm):
     auto_release = BooleanField("Auto release")
-    auto_release_time = TimeField("Auto release at", validators=[DataRequired()])
+    auto_release_time = TimeField("Auto release at", validators=[InputRequired()])
     submit = SubmitField("Save")
 
 
 class ResourceUpdateForm(FlaskForm):
-    name = StringField("Resource name", validators=[DataRequired()])
+    name = StrippedNameField("Resource name", validators=[InputRequired(), ValidString(), Length(min=3, max=25)])
     notes = TextAreaField("Notes")
     resource_type = SelectField("Resource type", choices=[("fpga", "FPGA"), ("asic", "ASIC"), ("other", "Other")], default="other")
     submit = SubmitField("Update")

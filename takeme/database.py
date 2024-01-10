@@ -55,5 +55,6 @@ class Settigns(database.Model):
     auto_release_time: Mapped[time] = mapped_column(Time, nullable=False)
 
     def __init__(self, auto_release, auto_release_time):
+        self.id = 1
         self.auto_release = auto_release
         self.auto_release_time = auto_release_time
