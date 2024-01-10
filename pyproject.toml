@@ -19,7 +19,6 @@ eventlet = "^0.34"
 flask = "^3.0"
 flask-apscheduler = "^1.13"
 flask-bcrypt = "^1.0"
-flask-jwt-extended = { version = "^4.6", extras = ["asymmetric_crypto"] }
 flask-login = "^0.6"
 flask-migrate = "^4.0"
 flask-socketio = "^5.3"
