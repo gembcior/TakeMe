@@ -29,6 +29,7 @@ python = "^3.12"
 rich = "^12.5"
 sqlalchemy = "^2.0"
 wtforms = "^3.1"
+natsort ="^8.4"
 
 
 [build-system]

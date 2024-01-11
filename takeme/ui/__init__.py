@@ -1,5 +1,6 @@
 from datetime import time
 
+from natsort import natsorted
 from flask import Blueprint
 from flask import current_app as app
 from flask import redirect, render_template
@@ -20,6 +21,7 @@ ui_bp.register_blueprint(resource_bp, url_prefix="/resource")
 @ui_bp.route("/")
 def ui():
     resources = database.session.query(Resource).all()
+    resources = natsorted(resources, key=lambda x: x.name)
     return render_template("home.html", resources=resources)
 
 
