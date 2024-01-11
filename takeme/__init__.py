@@ -5,7 +5,7 @@ from sqlalchemy.exc import NoResultFound
 
 from takeme.crypto import bcrypt
 from takeme.database import User, database, migrate
-from takeme.login import jwt, login_manager
+from takeme.login import login_manager
 from takeme.scheduler import scheduler
 from takeme.ui import ui_bp
 
@@ -16,9 +16,6 @@ class AppConfig(object):
     DATABASE_URI = "sqlite:///db.sqlite"
     DEBUG = True
     DEVELOPMENT = True
-    JWT_COOKIE_SECURE = False
-    JWT_SECRET_KEY = "192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf"
-    JWT_TOKEN_LOCATION = ["headers", "cookies"]
     SECRET_KEY = "192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf"
     SQLALCHEMY_DATABASE_URI = "sqlite:///db.sqlite"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -32,9 +29,6 @@ class ProductionConfig(object):
     DATABASE_URI = "sqlite:///db.sqlite"
     DEBUG = False
     DEVELOPMENT = False
-    JWT_COOKIE_SECURE = True
-    JWT_SECRET_KEY = "192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf"
-    JWT_TOKEN_LOCATION = ["headers", "cookies"]
     SECRET_KEY = "192b9bdd22ab9ed4d12e236c78afcb9a393ec15f71bbf5dc987d54727823bcbf"
     SQLALCHEMY_DATABASE_URI = "sqlite:///db.sqlite"
     SQLALCHEMY_TRACK_MODIFICATIONS = True
@@ -61,7 +55,6 @@ def create_app() -> Flask:
     app.config.from_object(cfg)
     app.config.from_pyfile("application.cfg", silent=True)
 
-    jwt.init_app(app)
     login_manager.init_app(app)
     bcrypt.init_app(app)
     database.init_app(app)
