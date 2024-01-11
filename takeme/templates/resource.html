@@ -55,6 +55,36 @@
 
 <hr class="my-4">
 
+  <div class="mx-2 my-2">
+    <dl class="row">
+      <dt class="col-4">Status</dt>
+      {% if resource.taken %}
+      <dd class="col-8">Taken</dd>
+      {% else %}
+      <dd class="col-8">Free</dd>
+      {% endif %}
+      <hr>
+      <dt class="col-4">Taken by</dt>
+      <dd class="col-8">{{ resource.taken_by | fullname }}</dd>
+      <hr>
+      <dt class="col-4">Taken on</dt>
+      {% if resource.taken %}
+      <dd class="col-8">{{ resource.taken_on | dateformat("%d/%m/%y %H:%M:%S") }}</dd>
+      {% else %}
+      <dd class="col-8">None</dd>
+      {% endif %}
+      <hr>
+      <dt class="col-4">Message</dt>
+      <dd class="col-8">{{ resource.message }}</dd>
+    </dl>
+  </div>
+
+<hr class="my-4">
+
+<div class="d-flex justify-content-end align-items-center mt-4">
+  <button type="button" class="btn btn-primary" id="resourceTakeButton" data-bs-resource-id="{{ resource.id }}">Take</button>
+</div>
+
 <div class="d-flex justify-content-end align-items-center mt-4">
   <button type="button" class="btn btn-warning" id="resourceReleaseButton" data-bs-resource-id="{{ resource.id }}">Release</button>
 </div>
@@ -71,6 +101,11 @@
 <script src="{{ url_for('static', filename='js/resource.js') }}"></script>
 <script>
 $(document).ready(function() {
+  document.getElementById("resourceTakeButton").addEventListener("click", function() {
+    const id = this.getAttribute('data-bs-resource-id')
+    takeResource(id)
+  });
+
   document.getElementById("resourceReleaseButton").addEventListener("click", function() {
     const id = this.getAttribute('data-bs-resource-id')
     releaseResource(id)

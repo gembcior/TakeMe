@@ -58,6 +58,8 @@ def take_by_id(id):
     resource = get_resource(id)
     if resource is None:
         return make_response({"error": f"No resource found with id {id}"}, 400)
+    if resource.taken:
+        return make_response({"error": f"Resource {id} already taken"}, 400)
     resource.taken = True
     resource.taken_by = current_user.username
     resource.taken_on = datetime.now()
