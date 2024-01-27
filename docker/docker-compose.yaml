@@ -6,8 +6,9 @@ services:
     restart: unless-stopped
     ports:
       - '8000:8000'
-    environment:
-      - TZ=Europe/Warsaw
+    env_file:
+      - path: ./application.env
+        required: true
     volumes:
       - takeme-instance:/usr/var/takeme-instance
       - /etc/timezone:/etc/timezone:ro
