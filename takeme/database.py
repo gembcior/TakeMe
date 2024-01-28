@@ -3,7 +3,8 @@ from datetime import datetime, time
 from flask_login import UserMixin
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import Boolean, DateTime, Integer, String, Text, Time
+from sqlalchemy import Boolean, DateTime, Integer, PickleType, String, Text, Time
+from sqlalchemy.ext.mutable import MutableList
 from sqlalchemy.orm import Mapped, mapped_column
 
 from takeme.crypto import bcrypt
@@ -40,6 +41,7 @@ class Resource(database.Model):
     taken_on: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     message: Mapped[str] = mapped_column(Text, nullable=True, default="")
+    history: Mapped[list[tuple[datetime, str]]] = mapped_column(MutableList.as_mutable(PickleType), nullable=True)
 
     def __init__(self, name, resource_type, notes):
         self.name = name
@@ -47,6 +49,7 @@ class Resource(database.Model):
         self.notes = notes
         self.message = ""
         self.taken_by = ""
+        self.history = []
 
 
 class Settigns(database.Model):

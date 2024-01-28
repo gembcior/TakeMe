@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import UTC, datetime
 
 from flask import Blueprint, abort, make_response, redirect, render_template, request
 from flask_login import current_user, login_required
@@ -19,11 +19,6 @@ def get_resource(id: int) -> Resource | None:
     return resource
 
 
-def update_database_resource(resource: Resource) -> None:
-    database.session.merge(resource)
-    database.session.commit()
-
-
 def emit_resource_update(id: int) -> None:
     resource = get_resource(id)
     if resource is None:
@@ -33,6 +28,37 @@ def emit_resource_update(id: int) -> None:
         "resource_id": resource.id,
     }
     socketio.emit("resource update", output)
+
+
+def update_database_resource(resource: Resource) -> None:
+    database.session.merge(resource)
+    database.session.commit()
+    emit_resource_update(resource.id)
+
+
+def add_database_resource(resource: Resource) -> None:
+    database.session.add(resource)
+    database.session.commit()
+    emit_resource_update(resource.id)
+
+
+def delete_database_resource(resource: Resource) -> None:
+    database.session.delete(resource)
+    database.session.commit()
+    emit_resource_update(resource.id)
+
+
+def append_resource_history(resource: Resource, msg: str) -> list[tuple[datetime, str]]:
+    history = resource.history
+    record = (datetime.now(UTC), msg)
+    if history:
+        if len(history) >= 100:
+            history = history[1:] + [record]
+        else:
+            history.append(record)
+    else:
+        history = [record]
+    return history
 
 
 @resource_bp.route("/add", methods=["GET", "POST"])
@@ -45,9 +71,7 @@ def add():
             resource_type=form.resource_type.data,
             notes=form.notes.data,
         )
-        database.session.add(resource)
-        database.session.commit()
-        emit_resource_update(resource.id)
+        add_database_resource(resource)
         return redirect("/")
     return render_template("add.html", form=form)
 
@@ -64,9 +88,8 @@ def take_by_id(id):
     resource.taken_by = current_user.username
     resource.taken_on = datetime.now()
     resource.message = ""
-    database.session.merge(resource)
-    database.session.commit()
-    emit_resource_update(resource.id)
+    resource.history = append_resource_history(resource, f"Taken by {current_user.first_name} {current_user.last_name}")
+    update_database_resource(resource)
     return make_response({"ok": "true"}, 200)
 
 
@@ -79,8 +102,8 @@ def release_by_id(id):
     resource.taken = False
     resource.taken_by = None
     resource.taken_on = None
-    database.session.commit()
-    emit_resource_update(resource.id)
+    resource.history = append_resource_history(resource, f"Released by {current_user.first_name} {current_user.last_name}")
+    update_database_resource(resource)
     return make_response({"ok": "true"}, 200)
 
 
@@ -109,8 +132,8 @@ def update_by_id(id):
         resource.name = form.name.data
         resource.resource_type = form.resource_type.data
         resource.notes = form.notes.data
-        database.session.commit()
-        emit_resource_update(resource.id)
+        resource.history = append_resource_history(resource, f"Updated by {current_user.first_name} {current_user.last_name}")
+        update_database_resource(resource)
         return redirect("/")
     return render_template("resource.html", resource=resource, form=form)
 
@@ -121,9 +144,7 @@ def rm_by_id(id):
     resource = get_resource(id)
     if resource is None:
         return make_response({"error": f"No resource found with id {id}"}, 400)
-    database.session.delete(resource)
-    database.session.commit()
-    emit_resource_update(resource.id)
+    delete_database_resource(resource)
     return make_response({"ok": "true"}, 200)
 
 
@@ -141,8 +162,8 @@ def msg_by_id(id):
     if resource is None:
         return make_response({"error": f"No resource found with id {id}"}, 400)
     resource.message = data
-    database.session.commit()
-    emit_resource_update(resource.id)
+    resource.history = append_resource_history(resource, f"Message added by {current_user.first_name} {current_user.last_name}")
+    update_database_resource(resource)
     return make_response({"ok": "true"}, 200)
 
 

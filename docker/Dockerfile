@@ -27,8 +27,7 @@ RUN git clone https://github.com/gembcior/TakeMe.git && \
     poetry build
 
 RUN pip install --ignore-installed TakeMe/dist/*.whl && \
-    mkdir -p /usr/var/takeme-instance && \
-    cp -r TakeMe/migrations /usr/var/takeme-instance
+    mkdir -p /usr/var/takeme-instance
 
 WORKDIR /usr/var/takeme-instance
 
