@@ -1,3 +1,5 @@
+{% import 'resource_macro.html' as list_item with context %}
+
 {% extends 'base.html' %}
 
 {% block title %} Update Resource {% endblock title %}
@@ -83,6 +85,13 @@
 
 <div class="d-flex justify-content-between align-items-center mt-4">
   <button type="button" class="btn btn-primary" id="resourceTakeButton" data-bs-resource-id="{{ resource.id }}">Take</button>
+  {% if current_user.is_authenticated %}
+    {% if resource.taken %}
+      {% if current_user.username == resource.taken_by %}
+      <button type="button" class="btn btn-success"  data-bs-toggle="modal" data-bs-target="#messageModal" data-bs-resource="{{ resource.name }}" data-bs-resource-id="{{ resource.id }}">Message</button>
+      {% endif %}
+    {% endif %}
+  {% endif %}
   <button type="button" class="btn btn-warning" id="resourceReleaseButton" data-bs-resource-id="{{ resource.id }}">Release</button>
   <button type="button" class="btn btn-danger" id="resourceDeleteButton" data-bs-resource-id="{{ resource.id }}">Delete</button>
 </div>
@@ -92,8 +101,10 @@
   <ul class="list-group">
     {% for item in resource.history  | reverse %}
       <li class="list-group-item">
-        <span class="text-warning-emphasis">[<time datetime="{{ item[0] }}">{{ item[0] }}</time>]</span>
-        <span class="ms-2">{{ item[1] }}</span>
+        <div class="row">
+          <span class="text-warning-emphasis col-4">[<time datetime="{{ item[0] }}">{{ item[0] }}</time>]</span>
+          <span class="col-8">{{ item[1] }}</span>
+        </div>
       </li>
     {% endfor %}
   </ul>
@@ -101,11 +112,15 @@
 {% endif %}
 
 </div>
+
+{{ list_item.resource_msg_modal() }}
+
 {% endblock content %}
 
 {% block scripts %}
 
 <script src="{{ url_for('static', filename='js/resource.js') }}"></script>
+<script src="{{ url_for('static', filename='js/modal.js') }}"></script>
 <script>
 $(document).ready(function() {
   document.getElementById("resourceTakeButton").addEventListener("click", function() {

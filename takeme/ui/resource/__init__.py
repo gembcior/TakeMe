@@ -162,7 +162,7 @@ def msg_by_id(id):
     if resource is None:
         return make_response({"error": f"No resource found with id {id}"}, 400)
     resource.message = data
-    resource.history = append_resource_history(resource, f"Message added by {current_user.first_name} {current_user.last_name}")
+    resource.history = append_resource_history(resource, f"Message added by {current_user.first_name} {current_user.last_name}: '{resource.message}'")
     update_database_resource(resource)
     return make_response({"ok": "true"}, 200)
 

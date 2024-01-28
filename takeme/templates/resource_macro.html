@@ -45,7 +45,7 @@
       {% if current_user.is_authenticated %}
         {% if resource.taken %}
           {% if current_user.username == resource.taken_by %}
-      <button type="button" class="btn btn-success mx-2 mt-1"  data-bs-toggle="modal" data-bs-target="#messageModal" data-bs-resource="{{ resource.name }}" data-bs-resource-id="{{ resource.id }}">Message</button>
+          <button type="button" class="btn btn-success mx-2 mt-1"  data-bs-toggle="modal" data-bs-target="#messageModal" data-bs-resource="{{ resource.name }}" data-bs-resource-id="{{ resource.id }}">Message</button>
           <button type="button" class="btn btn-secondary mx-2 mt-1" onclick="releaseResource('{{ resource.id }}')">Release</button>
           {% else %}
           <button type="button" class="btn btn-outline-primary mx-2 mt-1" onclick="" disabled>Take</button>
@@ -107,4 +107,30 @@
     {{ resource_info_block(resource) }}
 
   </div>
+{% endmacro %}
+
+
+{% macro resource_msg_modal() %}
+<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="messageModalLabel">Set message</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label for="message-text" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="messageText"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="setMsgModalButton">Set message</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endmacro %}
