@@ -38,7 +38,7 @@ class Resource(database.Model):
     taken_by: Mapped[str | None] = mapped_column(String, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     resource_type: Mapped[str] = mapped_column(String, nullable=False)
-    taken_on: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    taken_on: Mapped[datetime | None] = mapped_column(PickleType, nullable=True)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
     message: Mapped[str] = mapped_column(Text, nullable=True, default="")
     history: Mapped[list[tuple[datetime, str]]] = mapped_column(MutableList.as_mutable(PickleType), nullable=True)

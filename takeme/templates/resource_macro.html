@@ -86,7 +86,11 @@
       <hr>
       <dt class="col-2">Taken on</dt>
       {% if resource.taken %}
-      <dd class="col-10">{{ resource.taken_on | dateformat("%d/%m/%y %H:%M:%S") }}</dd>
+      <dd class="col-10">
+        <time datetime="{{ resource.taken_on }}">
+        {{ resource.taken_on | dateformat("%d/%m/%y %H:%M:%S") }}
+        </time>
+      </dd>
       {% else %}
       <dd class="col-10">None</dd>
       {% endif %}

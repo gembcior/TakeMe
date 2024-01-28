@@ -62,3 +62,12 @@ function deleteResource (id) {
     dataType: "",
   });
 }
+
+
+$(document).ready(function() {
+  document.querySelectorAll('time').forEach($e => {
+    const userLocale = navigator.languages && navigator.languages.length ? navigator.languages[0] : navigator.language;
+    const date = new Date($e.dateTime);
+    $e.innerHTML = date.toLocaleString(userLocale, { hour12: false });
+  });
+});

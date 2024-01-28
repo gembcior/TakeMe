@@ -86,7 +86,7 @@ def take_by_id(id):
         return make_response({"error": f"Resource {id} already taken"}, 400)
     resource.taken = True
     resource.taken_by = current_user.username
-    resource.taken_on = datetime.now()
+    resource.taken_on = datetime.now(UTC)
     resource.message = ""
     resource.history = append_resource_history(resource, f"Taken by {current_user.first_name} {current_user.last_name}")
     update_database_resource(resource)
