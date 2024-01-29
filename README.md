@@ -20,7 +20,7 @@ The project uses the docker compose plugin to deploy the application to a produc
 
 ## Deploy new application instance
 ```
-docker compose up -d
+./deploy.sh
 ```
 
 ## Stop the application
@@ -71,6 +71,11 @@ The project uses docker volumes to store database file. This allows to retain da
 ## Do a backup
 ```
 ./backup.sh
+```
+
+## Restore backup
+```
+./restore.sh <BACKUP_TAR_FILE>
 ```
 
 # Database Update

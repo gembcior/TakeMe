@@ -1,7 +1,14 @@
 #!/bin/bash
 
 BACKUP=$1
-DOCKER_COMPOSE_NAME=$(docker compose ps -a | cut -d ' ' -f1 | head -2 | tail -1)
-echo "Restore backup ${BACKUP} for ${DOCKER_COMPOSE_NAME}"
-docker run --rm --volumes-from ${DOCKER_COMPOSE_NAME} -v $(pwd)/backup:/backup --env-file application.env takeme tar -xvf /backup/${BACKUP} --wildcards *db.sqlite
-echo "Restore backup ${BACKUP} for ${DOCKER_COMPOSE_NAME} done"
+
+if [[ ! -f $(pwd)/backup/${BACKUP} ]]; then
+  echo "ERROR: There is no ${BACKUP}"
+  exit 255
+fi
+
+echo "Restore backup ${BACKUP}"
+docker compose stop
+docker compose run --rm -v $(pwd)/backup:/backup takeme tar -xvf /backup/${BACKUP}
+docker compose start
+echo "Restore backup ${BACKUP} done"
